@@ -1,4 +1,3 @@
-// app/notes/action/create/page.tsx
 import type { Metadata } from "next";
 import NoteForm from "@/components/NoteForm/NoteForm";
 import css from "./CreateNote.module.css";
