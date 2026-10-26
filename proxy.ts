@@ -1,31 +1,3 @@
-// import { NextResponse } from "next/server";
-// import type { NextRequest } from "next/server";
-
-// export function proxy(request: NextRequest) {
-//   const token =
-//     request.cookies.get("token") || request.cookies.get("refreshToken");
-//   const { pathname } = request.nextUrl;
-
-//   const isPrivateKey =
-//     pathname.startsWith("/profile") || pathname.startsWith("/notes");
-//   const isAuthRoute =
-//     pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up");
-
-//   if (isPrivateKey && !token) {
-//     return NextResponse.redirect(new URL("/sign-in", request.url));
-//   }
-
-//   if (isAuthRoute && token) {
-//     return NextResponse.redirect(new URL("/profile", request.url));
-//   }
-
-//   return NextResponse.next();
-// }
-
-// export const config = {
-//   matcher: ["/profile/:path*", "/notes/:path*", "/sign-in", "/sign-up"],
-// };
-
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -55,11 +27,18 @@ export async function proxy(request: NextRequest) {
       if (response.ok) {
         isAuthenticated = true;
 
-        const setCookieHeader = response.headers.get("set-cookie");
-
         const res = NextResponse.next();
+
+        const setCookieHeader = response.headers.get("set-cookie");
         if (setCookieHeader) {
-          res.headers.set("set-cookie", setCookieHeader);
+          const cookiesToSet = setCookieHeader.split(/,\s*(?=[^;]+=)/);
+          cookiesToSet.forEach((cookieStr) => {
+            const [cookiePart] = cookieStr.split(";");
+            const [name, value] = cookiePart.split("=");
+            if (name && value) {
+              res.cookies.set(name.trim(), value.trim());
+            }
+          });
         }
 
         if (isAuthRoute) {
