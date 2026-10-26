@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import * as cookie from "cookie";
 
 export async function proxy(request: NextRequest) {
   const accessToken = request.cookies.get("accessToken")?.value;
@@ -31,12 +32,28 @@ export async function proxy(request: NextRequest) {
 
         const setCookieHeader = response.headers.get("set-cookie");
         if (setCookieHeader) {
-          const cookiesToSet = setCookieHeader.split(/,\s*(?=[^;]+=)/);
-          cookiesToSet.forEach((cookieStr) => {
-            const [cookiePart] = cookieStr.split(";");
-            const [name, value] = cookiePart.split("=");
-            if (name && value) {
-              res.cookies.set(name.trim(), value.trim());
+          const cookiesArray = Array.isArray(setCookieHeader)
+            ? setCookieHeader
+            : [setCookieHeader];
+
+          cookiesArray.forEach((cookieStr) => {
+            const parsed = cookie.parseSetCookie(cookieStr);
+            if (parsed && parsed.name && parsed.value) {
+              res.cookies.set({
+                name: parsed.name,
+                value: parsed.value,
+                domain: parsed.domain,
+                path: parsed.path,
+                maxAge: parsed.maxAge,
+                expires: parsed.expires,
+                httpOnly: parsed.httpOnly,
+                secure: parsed.secure,
+                sameSite: parsed.sameSite as
+                  | "strict"
+                  | "lax"
+                  | "none"
+                  | undefined,
+              });
             }
           });
         }
