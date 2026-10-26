@@ -2,6 +2,12 @@ import { api } from "./api";
 import { Note, NoteTag } from "@/types/note";
 import { User } from "@/types/user";
 
+export interface FetchNotesParams {
+  page?: number;
+  perPage?: number;
+  search?: string;
+}
+
 export interface FetchNotesResponse {
   notes: Note[];
   totalPages: number;
