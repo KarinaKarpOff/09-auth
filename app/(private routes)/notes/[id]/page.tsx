@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { fetchNoteById } from "@/lib/api/clientApi";
+import {
+  QueryClient,
+  HydrationBoundary,
+  dehydrate,
+} from "@tanstack/react-query";
+import { fetchNoteById } from "@/lib/api/serverApi"; // Виправляємо імпорт на serverApi
 import NoteDetailsClient from "./NoteDetails.client";
 
 interface Props {
@@ -9,6 +14,7 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const resolvedParams = await params;
   try {
+    // Використовуємо serverApi і в метаданих
     const note = await fetchNoteById(resolvedParams.id);
     return {
       title: `${note.title} | NoteHub`,
@@ -34,10 +40,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 }
-export default async function NotePage() {
+
+export default async function NotePage({ params }: Props) {
+  const resolvedParams = await params;
+  const noteId = resolvedParams.id;
+
+  const queryClient = new QueryClient();
+
+  // Виконуємо prefetch нотатки на сервері за правильним queryKey
+  await queryClient.prefetchQuery({
+    queryKey: ["note", noteId],
+    queryFn: () => fetchNoteById(noteId),
+  });
+
   return (
-    <main>
-      <NoteDetailsClient />
-    </main>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <main>
+        <NoteDetailsClient id={noteId} />
+      </main>
+    </HydrationBoundary>
   );
 }

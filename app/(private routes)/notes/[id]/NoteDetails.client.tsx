@@ -1,14 +1,14 @@
 "use client";
-
-import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { fetchNoteById } from "@/lib/api/clientApi";
 import css from "./NoteDetails.module.css";
 
-export default function NoteDetailsClient() {
-  const params = useParams();
-  const id = params?.id as string;
+interface NoteDetailsClientProps {
+  id: string;
+}
 
+// 2. Приймаємо id у параметрах компонента
+export default function NoteDetailsClient({ id }: NoteDetailsClientProps) {
   const {
     data: note,
     isLoading,

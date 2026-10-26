@@ -36,6 +36,8 @@ export default function NotesClient({ tag }: NotesClientProps) {
   if (isLoading) return <p>Loading notes...</p>;
   if (isError || !data) return <p>Error loading notes!</p>;
 
+  const hasNotes = data.notes && data.notes.length > 0;
+
   return (
     <div className={css.container}>
       <div className={css.toolbar}>
@@ -45,17 +47,16 @@ export default function NotesClient({ tag }: NotesClientProps) {
         </Link>
       </div>
 
-      {data.notes && data.notes.length > 0 ? (
-        <NoteList notes={data.notes} />
-      ) : (
-        <p>No notes found.</p>
-      )}
+      {hasNotes ? <NoteList notes={data.notes} /> : <p>No notes found.</p>}
 
-      <Pagination
-        totalPages={data.totalPages}
-        currentPage={page}
-        onPageChange={setPage}
-      />
+      {/* Рендеримо пагінацію тільки тоді, коли є нотатки */}
+      {hasNotes && (
+        <Pagination
+          totalPages={data.totalPages}
+          currentPage={page}
+          onPageChange={setPage}
+        />
+      )}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { api } from "./api";
 import { Note } from "@/types/note";
 import { User } from "@/types/user";
+import type { AxiosResponse } from "axios";
 
 // Допоміжна функція для отримання кук на сервері
 const getAuthHeaders = () => {
@@ -35,13 +36,9 @@ export async function fetchNoteById(id: string): Promise<Note> {
   return response.data;
 }
 
-export async function checkSession(): Promise<User | null> {
-  try {
-    const response = await api.get<User>("/auth/session", getAuthHeaders());
-    return response.data;
-  } catch {
-    return null;
-  }
+export async function checkSession(): Promise<AxiosResponse<User>> {
+  const response = await api.get<User>("/auth/session", getAuthHeaders());
+  return response;
 }
 
 export async function getMe(): Promise<User> {

@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useAuthStore } from "@/lib/store/authStore";
 import { updateMe } from "@/lib/api/clientApi";
 import css from "./EditProfilePage.module.css";
@@ -10,7 +11,6 @@ export default function EditProfilePage() {
   const { user, setUser } = useAuthStore();
   const router = useRouter();
 
-  // Ініціалізуємо стан одразу з поточного юзера без useEffect
   const [username, setUsername] = useState(user?.username || "");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +21,6 @@ export default function EditProfilePage() {
     setIsLoading(true);
 
     try {
-      // Передаємо правильне поле, яке очікує бекенд (username замість email)
       const updatedUser = await updateMe({ username });
       setUser(updatedUser);
       router.push("/profile");
@@ -42,6 +41,33 @@ export default function EditProfilePage() {
         <h1 className={css.title}>Edit Profile</h1>
 
         <form onSubmit={handleSubmit} className={css.form}>
+          {/* Відображення аватара за допомогою next/image */}
+          {user?.avatar && (
+            <div className={css.avatarWrapper}>
+              <Image
+                src={user.avatar}
+                alt={user.username || "User avatar"}
+                width={80}
+                height={80}
+                className={css.avatar}
+              />
+            </div>
+          )}
+
+          {/* Поле email (тільки для читання) */}
+          <div className={css.formGroup}>
+            <label htmlFor="email" className={css.label}>
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={user?.email || ""}
+              disabled
+              className={css.input}
+            />
+          </div>
+
           <div className={css.formGroup}>
             <label htmlFor="username" className={css.label}>
               Username
@@ -60,7 +86,7 @@ export default function EditProfilePage() {
             <button
               type="submit"
               disabled={isLoading}
-              className={css.submitButton}
+              className={css.saveButton}
             >
               {isLoading ? "Saving..." : "Save Changes"}
             </button>
