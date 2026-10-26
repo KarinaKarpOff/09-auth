@@ -14,7 +14,7 @@ export default async function ProfilePage() {
   const user = await getMe();
 
   return (
-    <main className={css.mainContent}>
+    <main className={css.profileContainer}>
       <div className={css.profileCard}>
         <h1 className={css.FormTitle}>Profile</h1>
 
@@ -45,7 +45,7 @@ export default async function ProfilePage() {
         </div>
 
         <div className={css.actions}>
-          <Link href="/profile/edit" className={css.editProfileButton}>
+          <Link href="/profile/edit" className={css.editButton}>
             Edit Profile
           </Link>
         </div>

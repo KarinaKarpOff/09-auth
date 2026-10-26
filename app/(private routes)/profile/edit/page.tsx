@@ -37,8 +37,8 @@ export default function EditProfilePage() {
 
   return (
     <main className={css.container}>
-      <div className={css.card}>
-        <h1 className={css.title}>Edit Profile</h1>
+      <div className={css.profileCard}>
+        <h1 className={css.formTitle}>Edit Profile</h1>
 
         <form onSubmit={handleSubmit} className={css.form}>
           {/* Відображення аватара за допомогою next/image */}
@@ -86,7 +86,7 @@ export default function EditProfilePage() {
             <button
               type="submit"
               disabled={isLoading}
-              className={css.saveButton}
+              className={css.submitButton}
             >
               {isLoading ? "Saving..." : "Save Changes"}
             </button>
