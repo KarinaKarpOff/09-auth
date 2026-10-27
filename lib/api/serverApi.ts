@@ -4,8 +4,8 @@ import { Note } from "@/types/note";
 import { User } from "@/types/user";
 import type { AxiosResponse } from "axios";
 
-const getAuthHeaders = () => {
-  const cookieStore = cookies();
+const getAuthHeaders = async () => {
+  const cookieStore = await cookies();
   return {
     headers: {
       Cookie: cookieStore.toString(),
@@ -23,24 +23,29 @@ export async function fetchNotes(
   if (tag && tag !== "all") {
     params.tag = tag;
   }
+
+  const authHeaders = await getAuthHeaders();
   const response = await api.get("/notes", {
-    ...getAuthHeaders(),
+    ...authHeaders,
     params,
   });
   return response.data;
 }
 
 export async function fetchNoteById(id: string): Promise<Note> {
-  const response = await api.get<Note>(`/notes/${id}`, getAuthHeaders());
+  const authHeaders = await getAuthHeaders();
+  const response = await api.get<Note>(`/notes/${id}`, authHeaders);
   return response.data;
 }
 
 export async function checkSession(): Promise<AxiosResponse<User>> {
-  const response = await api.get<User>("/auth/session", getAuthHeaders());
+  const authHeaders = await getAuthHeaders();
+  const response = await api.get<User>("/auth/session", authHeaders);
   return response;
 }
 
 export async function getMe(): Promise<User> {
-  const response = await api.get<User>("/users/me", getAuthHeaders());
+  const authHeaders = await getAuthHeaders();
+  const response = await api.get<User>("/users/me", authHeaders);
   return response.data;
 }
