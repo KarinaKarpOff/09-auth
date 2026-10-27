@@ -4,7 +4,6 @@ import { Note } from "@/types/note";
 import { User } from "@/types/user";
 import type { AxiosResponse } from "axios";
 
-// Допоміжна функція для отримання кук на сервері
 const getAuthHeaders = () => {
   const cookieStore = cookies();
   return {

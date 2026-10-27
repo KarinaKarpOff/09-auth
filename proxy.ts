@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { cookies } from "next/headers";
 import * as cookie from "cookie";
 
 export async function proxy(request: NextRequest) {
-  const accessToken = request.cookies.get("accessToken")?.value;
-  const refreshToken = request.cookies.get("refreshToken")?.value;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+  const refreshToken = cookieStore.get("refreshToken")?.value;
   const { pathname } = request.nextUrl;
 
   const isPrivateKey =
@@ -39,7 +41,7 @@ export async function proxy(request: NextRequest) {
           cookiesArray.forEach((cookieStr) => {
             const parsed = cookie.parseSetCookie(cookieStr);
             if (parsed && parsed.name && parsed.value) {
-              res.cookies.set({
+              cookieStore.set({
                 name: parsed.name,
                 value: parsed.value,
                 domain: parsed.domain,

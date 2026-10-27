@@ -41,7 +41,6 @@ export default function EditProfilePage() {
         <h1 className={css.formTitle}>Edit Profile</h1>
 
         <form onSubmit={handleSubmit} className={css.form}>
-          {/* Відображення аватара за допомогою next/image */}
           {user?.avatar && (
             <div className={css.avatarWrapper}>
               <Image
@@ -54,7 +53,6 @@ export default function EditProfilePage() {
             </div>
           )}
 
-          {/* Поле email (тільки для читання) */}
           <div className={css.formGroup}>
             <label htmlFor="email" className={css.label}>
               Email

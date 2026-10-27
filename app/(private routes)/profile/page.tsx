@@ -10,7 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default async function ProfilePage() {
-  // Отримуємо дані користувача на сервері
   const user = await getMe();
 
   return (
@@ -18,7 +17,6 @@ export default async function ProfilePage() {
       <div className={css.profileCard}>
         <h1 className={css.FormTitle}>Profile</h1>
 
-        {/* Блок з аватаром та ім'ям */}
         <div className={css.userInfo}>
           {user?.avatar && (
             <div className={css.avatarWrapper}>

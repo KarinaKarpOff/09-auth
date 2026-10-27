@@ -49,7 +49,6 @@ export default function NotesClient({ tag }: NotesClientProps) {
 
       {hasNotes ? <NoteList notes={data.notes} /> : <p>No notes found.</p>}
 
-      {/* Рендеримо пагінацію тільки тоді, коли є нотатки */}
       {hasNotes && (
         <Pagination
           totalPages={data.totalPages}

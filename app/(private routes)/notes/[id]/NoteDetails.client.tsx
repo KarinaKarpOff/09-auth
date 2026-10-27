@@ -7,7 +7,6 @@ interface NoteDetailsClientProps {
   id: string;
 }
 
-// 2. Приймаємо id у параметрах компонента
 export default function NoteDetailsClient({ id }: NoteDetailsClientProps) {
   const {
     data: note,
